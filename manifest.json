@@ -1,6 +1,6 @@
 {
   "name": "Span Mover",
-  "version": "0.1",
+  "version": "0.3",
   "description": "A tool to modify HTML Spans ever so slightly",
   "devtools_page": "devtools.html",
   "background": {
