@@ -13,6 +13,7 @@ function updateSpan(event) {
   }
   activeElement = event.target;
   chrome.runtime.sendMessage({
+    type: "SPAN",
     content: activeElement.innerHTML,
     style: activeElement.getAttribute('style'),
     class: activeElement.getAttribute('class')
@@ -25,8 +26,16 @@ function modifySpan(message) {
   activeElement.setAttribute('class', message.class);
 }
 
+function arrowKeyListener(event){
+  event.preventDefault();
+  chrome.runtime.sendMessage({
+    type: "KEY",
+    keyCode: event.keyCode
+  })
+}
 if (insert == null) {
   document.addEventListener('mouseup', updateSpan);
+  document.onkeydown = arrowKeyListener;
   console.log('Mouse listener attached');
 }
 

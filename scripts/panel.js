@@ -13,14 +13,19 @@ function reset() {
 
 function update(message) {
   console.log(message);
-  activeElement = message;
-  document.querySelector('#selected').value = message.content;
-  document.querySelector('#class').value = message.class;
-  sizeStringArr = activeElement.style.split(';');
-  for (var dim in sizeStringArr.slice(0, -1)) {
-    kvpair = sizeStringArr[dim].split(':');
-    console.log(kvpair);
-    document.getElementById(kvpair[0]).value = kvpair[1].slice(0, -2);
+  if (message.type == "SPAN"){
+    activeElement = message;
+    document.querySelector('#selected').value = message.content;
+    document.querySelector('#class').value = message.class;
+    sizeStringArr = activeElement.style.split(';');
+    for (var dim in sizeStringArr.slice(0, -1)) {
+      kvpair = sizeStringArr[dim].split(':');
+      console.log(kvpair);
+      document.getElementById(kvpair[0]).value = kvpair[1].slice(0, -2);
+    }
+  }
+  if (message.type == "KEY"){
+    arrowKeyPress(message);
   }
 }
 
@@ -67,8 +72,15 @@ document.querySelector('#refresh').addEventListener(
   false
 );
 
-document.querySelector('#reset').addEventListener('click', reset);
+function fill(){
+  sendObjectToInspectedPage({
+    action: 'script',
+    content: 'scripts/populate.js'
+  });
+}
 
+document.querySelector('#reset').addEventListener('click', reset);
+document.querySelector('#fill').addEventListener('click', fill);
 inputs = Array.from(document.getElementsByClassName('dimVal'));
 inputs.forEach(element => {
   element.addEventListener('change', modifyActiveElement);
@@ -83,3 +95,31 @@ minus1s = Array.from(document.getElementsByClassName('minus1'));
 minus1s.forEach(element => {
   element.addEventListener('click', subOneToValue);
 });
+
+function arrowKeyPress(e){
+  if (e.keyCode == '38') {
+    // up arrow
+    document.getElementById("top").value =
+    parseInt(document.getElementById("top").value) - 1;
+    modifyActiveElement();
+  }
+  else if (e.keyCode == '40') {
+      // down arrow
+    document.getElementById("top").value =
+    parseInt(document.getElementById("top").value) + 1;
+    modifyActiveElement();
+  }
+  else if (e.keyCode == '37') {
+     // left arrow
+    document.getElementById("left").value =
+    parseInt(document.getElementById("left").value) - 1;
+    modifyActiveElement();
+  }
+  else if (e.keyCode == '39') {
+     // right arrow
+    document.getElementById("left").value =
+    parseInt(document.getElementById("left").value) + 1;
+    modifyActiveElement();
+  }
+}
+document.onkeydown = arrowKeyPress
