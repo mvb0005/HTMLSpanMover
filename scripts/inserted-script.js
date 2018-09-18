@@ -8,20 +8,33 @@ function inserted() {
 }
 
 function updateSpan(event) {
-  if (event.target.tagName != 'SPAN') {
-    return;
+  if (event.target.tagName == 'SPAN') {
+    activeElement = event.target;
+    chrome.runtime.sendMessage({
+      type: "SPAN",
+      content: activeElement.innerHTML,
+      style: activeElement.getAttribute('style'),
+      class: activeElement.getAttribute('class')
+    });
+  } else if(event.target.tagName == 'INPUT'){
+    activeElement = event.target;
+    chrome.runtime.sendMessage({
+      type: "INPUT",
+      content: activeElement.getAttribute('id'),
+      style: activeElement.getAttribute('style'),
+      class: activeElement.getAttribute('class')
+    });
   }
-  activeElement = event.target;
-  chrome.runtime.sendMessage({
-    type: "SPAN",
-    content: activeElement.innerHTML,
-    style: activeElement.getAttribute('style'),
-    class: activeElement.getAttribute('class')
-  });
 }
 
 function modifySpan(message) {
   activeElement.innerHTML = message.content;
+  activeElement.setAttribute('style', message.style);
+  activeElement.setAttribute('class', message.class);
+}
+
+function modifyElement(message) {
+  activeElement.setAttribute('id', message.content);
   activeElement.setAttribute('style', message.style);
   activeElement.setAttribute('class', message.class);
 }

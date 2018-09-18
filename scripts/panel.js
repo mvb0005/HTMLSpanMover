@@ -24,6 +24,17 @@ function update(message) {
       document.getElementById(kvpair[0]).value = kvpair[1].slice(0, -2);
     }
   }
+  if (message.type == 'INPUT'){
+    activeElement = message;
+    document.querySelector('#selected').value = message.content;
+    document.querySelector('#class').value = message.class;
+    sizeStringArr = activeElement.style.split(';');
+    for (var dim in sizeStringArr.slice(0, -1)) {
+      kvpair = sizeStringArr[dim].split(':');
+      console.log(kvpair);
+      document.getElementById(kvpair[0]).value = kvpair[1].slice(0, -2);
+    }
+  }
   if (message.type == "KEY"){
     arrowKeyPress(message);
   }
@@ -44,12 +55,17 @@ function subOneToValue(event) {
 }
 
 function modifyActiveElement() {
+  console.log(activeElement);
   var newStyleStr = 'top:' + document.getElementById('top').value + 'px;';
   newStyleStr += 'left:' + document.getElementById('left').value + 'px;';
   newStyleStr += 'width:' + document.getElementById('width').value + 'px;';
-  newStyleStr +=
-    'line-height:' + document.getElementById('line-height').value + 'px;';
-
+  if (activeElement.type == 'INPUT'){
+    newStyleStr += 'height:' + document.getElementById('height').value + 'px;';
+  }
+  if (activeElement.type == 'SPAN'){
+    newStyleStr += 'line-height:' + document.getElementById('line-height').value + 'px;';
+  }
+  
   var newActiveElement = {
     content: document.getElementById('selected').value,
     class: document.getElementById('class').value,
